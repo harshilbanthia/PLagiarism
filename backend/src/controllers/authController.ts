@@ -17,14 +17,17 @@ export async function register(req: Request, res: Response): Promise<void> {
     name: string;
   };
 
+  // Coerce to primitive strings to prevent NoSQL operator injection
+  const safeEmail = String(email).toLowerCase().trim();
+
   try {
-    const existing = await User.findOne({ email });
+    const existing = await User.findOne({ email: safeEmail });
     if (existing) {
       res.status(409).json({ error: 'Email already in use' });
       return;
     }
 
-    const user = await User.create({ email, password, name });
+    const user = await User.create({ email: safeEmail, password: String(password), name: String(name) });
     const token = signToken(String(user._id), user.email);
 
     res.status(201).json({
@@ -42,14 +45,18 @@ export async function register(req: Request, res: Response): Promise<void> {
 export async function login(req: Request, res: Response): Promise<void> {
   const { email, password } = req.body as { email: string; password: string };
 
+  // Coerce to primitive strings to prevent NoSQL operator injection
+  const safeEmail = String(email).toLowerCase().trim();
+  const safePassword = String(password);
+
   try {
-    const user = await User.findOne({ email }).select('+password');
+    const user = await User.findOne({ email: safeEmail }).select('+password');
     if (!user) {
       res.status(401).json({ error: 'Invalid email or password' });
       return;
     }
 
-    const valid = await user.comparePassword(password);
+    const valid = await user.comparePassword(safePassword);
     if (!valid) {
       res.status(401).json({ error: 'Invalid email or password' });
       return;

@@ -1,11 +1,13 @@
 import { Router, Request, Response } from 'express';
 import { Types } from 'mongoose';
 import { authenticateToken } from '../middleware/auth';
+import { generalLimiter } from '../middleware/rateLimiter';
 import { Analysis } from '../models/Analysis';
 
 const router = Router();
 
 router.use(authenticateToken);
+router.use(generalLimiter);
 
 // ── GET /api/reports ──────────────────────────────────────────────────────────
 

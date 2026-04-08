@@ -11,11 +11,12 @@ import {
   validateLogin,
   handleValidationErrors,
 } from '../middleware/validation';
+import { authLimiter } from '../middleware/rateLimiter';
 
 const router = Router();
 
-router.post('/register', validateRegister, handleValidationErrors, register);
-router.post('/login', validateLogin, handleValidationErrors, login);
+router.post('/register', authLimiter, validateRegister, handleValidationErrors, register);
+router.post('/login', authLimiter, validateLogin, handleValidationErrors, login);
 
 router.use(authenticateToken);
 
