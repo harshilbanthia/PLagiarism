@@ -284,14 +284,14 @@ def detect_plagiarism(req: TextRequest):
         raise HTTPException(status_code=400, detail="text must not be empty")
 
     if _model_state["loaded"]:
-        score, sources = _model_model_plagiarism_safe(text)
+        score, sources = _model_plagiarism_safe(text)
     else:
         score, sources = _heuristic_plagiarism(text)
 
     return PlagiarismResponse(score=score, sources=sources)
 
 
-def _model_model_plagiarism_safe(text: str) -> tuple[float, list[dict]]:
+def _model_plagiarism_safe(text: str) -> tuple[float, list[dict]]:
     try:
         return _model_plagiarism(text)
     except Exception as exc:
