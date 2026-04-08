@@ -11,16 +11,15 @@ import {
   validateLogin,
   handleValidationErrors,
 } from '../middleware/validation';
-import { authLimiter } from '../middleware/rateLimiter';
+import { authLimiter, generalLimiter } from '../middleware/rateLimiter';
 
 const router = Router();
 
 router.post('/register', authLimiter, validateRegister, handleValidationErrors, register);
 router.post('/login', authLimiter, validateLogin, handleValidationErrors, login);
 
-router.use(authenticateToken);
-
-router.get('/profile', getProfile);
-router.put('/settings', updateSettings);
+// Rate limiter applied before auth for authenticated routes
+router.get('/profile', generalLimiter, authenticateToken, getProfile);
+router.put('/settings', generalLimiter, authenticateToken, updateSettings);
 
 export default router;

@@ -15,12 +15,12 @@ const router = Router();
 // ── Public routes (auth optional) ────────────────────────────────────────────
 router.post('/analyze', analysisLimiter, validateAnalysis, handleValidationErrors, analyze);
 
-// ── Authenticated routes (static paths must come before /:id) ────────────────
-router.get('/history', authenticateToken, generalLimiter, getHistory);
-router.get('/stats', authenticateToken, generalLimiter, getDashboardStats);
+// ── Authenticated routes: rate limiter BEFORE auth (static paths before /:id) ─
+router.get('/history', generalLimiter, authenticateToken, getHistory);
+router.get('/stats', generalLimiter, authenticateToken, getDashboardStats);
 
 // ── Param routes ──────────────────────────────────────────────────────────────
 router.get('/:id', generalLimiter, getAnalysis);
-router.delete('/:id', authenticateToken, generalLimiter, deleteAnalysis);
+router.delete('/:id', generalLimiter, authenticateToken, deleteAnalysis);
 
 export default router;

@@ -6,8 +6,8 @@ import { Analysis } from '../models/Analysis';
 
 const router = Router();
 
-router.use(authenticateToken);
 router.use(generalLimiter);
+router.use(authenticateToken);
 
 // ── GET /api/reports ──────────────────────────────────────────────────────────
 
