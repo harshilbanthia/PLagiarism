@@ -14,14 +14,15 @@ const MOCK: HistoryItem[] = [
   { id: '6', title: 'Thesis - Quantum Computing',       plagiarismScore: 78, aiDetectionScore: 30, createdAt: '2024-01-10T08:00:00Z' },
 ]
 
-function ScorePill({ score }: { score: number; type: 'plagiarism' | 'ai' }) {
+function ScorePill({ score, type }: { score: number; type: 'plagiarism' | 'ai' }) {
   const color =
     score < 20 ? 'text-green-400 bg-green-500/10 border-green-500/20'
     : score < 60 ? 'text-yellow-400 bg-yellow-500/10 border-yellow-500/20'
     : 'text-red-400 bg-red-500/10 border-red-500/20'
+  const label = type === 'ai' ? 'AI' : 'Plag'
   return (
     <span className={`px-2.5 py-0.5 text-xs font-semibold rounded-full border ${color}`}>
-      {score}%
+      {score}% {label}
     </span>
   )
 }
